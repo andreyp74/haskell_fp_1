@@ -25,7 +25,7 @@ helper f a b n = h * (mid + (sum $ map f xi))
 
 
 integration' :: (Double -> Double) -> Double -> Double -> Double
-integration' f a b = h/2 * (f a + f b + 2 * sumf)
+integration' f a b = h/2 * (f a + f b + 2 * sumf):
     where
         n = 1000
         h = (b - a)/n
