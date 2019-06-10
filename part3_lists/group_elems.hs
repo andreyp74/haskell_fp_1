@@ -18,18 +18,18 @@ module GroupElems where
 import Test.QuickCheck
 
 groupElems :: Eq a => [a] -> [[a]]
-groupElems as = ge as [] [[]]
-    where 
-        ge :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
-        ge [] ys zss = ys:zss
-        ge (x:xs) [] zss = ge xs [x] zss
-        ge (x:xs) (y:ys) zss = 
-            if x == y then ge xs (x:y:ys) zss
-            else ge xs [x] ((y:ys):zss)
+groupElems [] = []
+groupElems [x] = [[x]]
+groupElems (x:xs) = 
+    let s@(ys:yss) = groupElems xs 
+    in
+        if x == head ys 
+        then (x:ys):yss 
+        else [x]:s
 
-test1 = groupElems [] == [[]]
-test2 = groupElems [1,2] == [[1],[2]]
-test3 = groupElems [1,2,2,2,4] == [[1],[2,2,2],[4]]
-test4 = groupElems [1,2,3,2,4] == [[1],[2],[3],[2],[4]]
 
-main = mapM_ (quickCheck) [test1, test2, test3, test4]
+test1 = groupElems [1,2] == [[1],[2]]
+test2 = groupElems [1,2,2,2,4] == [[1],[2,2,2],[4]]
+test3 = groupElems [1,2,3,2,4] == [[1],[2],[3],[2],[4]]
+
+main = mapM_ (quickCheck) [test1, test2, test3]
