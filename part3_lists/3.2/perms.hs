@@ -15,17 +15,12 @@ perms :: [a] -> [[a]]
 perms [] = [[]]
 perms [x] = [[x]]
 perms (x:y:[]) = [[x,y],[y,x]]
-perms xs = concatMap (perms) (helper xs [])
---    where 
---        helper:: [a] -> [a] -> [[a]]
---        helper [] ys = [ys] 
---        helper (x:xs) ys = (ys ++ xs) : helper xs (x:ys)
+perms xs = helper xs []
+    where
+        helper [] _ = []
+        helper (x:xs) ys = (map (x:) $ perms (ys ++ xs)) ++ helper xs (x:ys)
 
-helper:: [a] -> [a] -> [[a]]
-helper [] _ = [[]]
-helper [x] ys = [ys] 
-helper (x:xs) ys = (ys ++ xs) : helper xs (x:ys)
 
-test1 = perms [1,2,3] == [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+test1 = perms [1,2,3] == [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,2,1],[3,1,2]]
 
 main = mapM_ (quickCheck) [test1]
