@@ -31,8 +31,8 @@ fibonacci' (-1) = 1
 fibonacci' (-2) = (-1)
 fibonacci' n | n > 0 = helper 1 0 2 n
              | n < 0 = ((-1) ^ ((-n) + 1)) * fibonacci' (-n)
-            
-helper :: Integer -> Integer -> Integer -> Integer -> Integer
-helper acc' acc'' i n | i == n = acc' + acc''
-                      | i < n  = helper (acc' + acc'') acc' (i + 1) n 
+    where 
+        helper :: Integer -> Integer -> Integer -> Integer -> Integer
+        helper acc' acc'' i n | i == n = acc' + acc''
+                              | i < n  = helper (acc' + acc'') acc' (i + 1) n
             
