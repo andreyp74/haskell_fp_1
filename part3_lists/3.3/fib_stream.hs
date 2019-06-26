@@ -10,8 +10,8 @@ module FibStream where
 import Test.QuickCheck
 
 
-fibStream' :: [Integer]
-fibStream' = helper 0
+fibStream :: [Integer]
+fibStream = helper 0   
     where
         helper n = fib n : helper (n+1)
         fib 0 = 0
@@ -21,7 +21,7 @@ fibStream' = helper 0
                 helper acc' acc'' i n | i == n = acc' + acc''
                                       | i < n  = helper (acc' + acc'') acc' (i + 1) n
 
-fibStream :: [Integer]
-fibStream = 0 : 1 : zipWith (+) fibStream (tail fibStream)
+fibStream' :: [Integer]
+fibStream' = 0 : 1 : zipWith (+) fibStream (tail fibStream)
 
 main = quickCheck $ (take 10 $ fibStream) == [0,1,1,2,3,5,8,13,21,34]

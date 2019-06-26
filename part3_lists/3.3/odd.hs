@@ -50,7 +50,20 @@ instance Enum Odd where
     enumFromThenTo from@(Odd f) then_@(Odd t) (Odd to) | f > t    = takeWhile (\(Odd x) -> x >= to) $ enumFromThen from then_
                                                        | f < t    = takeWhile (\(Odd x) -> x <= to) $ enumFromThen from then_
                                                        | otherwise = takeWhile (\(Odd x) -> x == to) $ enumFromThen from then_
-        
+
+{- Более короткий вариант
+
+instance Enum Odd' where  
+    succ = addEven 2
+    pred = addEven (-2)
+    toEnum n = Odd' $ toInteger n    
+    fromEnum (Odd' n) = fromIntegral n
+    enumFrom (Odd' n) = map Odd' [n,n+2..]
+    enumFromThen (Odd' n) (Odd' k) = map Odd' [n,k..]
+    enumFromTo (Odd' n) (Odd' m) = map Odd' [n,n+2..m]
+    enumFromThenTo (Odd' n) (Odd' k) (Odd' m) = map Odd' [n,k..m]
+ -}
+
 -- Большое число, которое не поместится в Int
 baseVal = 9900000000000000000
 
@@ -84,7 +97,8 @@ test9 = [testVal 7, testVal 5 .. testVal 11] == []
 test10 = [testVal 3, testVal 5 .. testVal 1] == []
 
 test11 = take 4 [testVal 5, testVal 5 .. ] == replicate 4 (testVal 5)
---test12 = take 4 [testVal 5, testVal 5 .. testVal 11] == replicate 4 (testVal 5)
+
+test12 = take 4 [testVal 5, testVal 5 .. testVal 11] == []
 test13 = take 4 [testVal 5, testVal 5 .. testVal 5] == replicate 4 (testVal 5)
 test14 = [testVal 5, testVal 5 .. testVal 3] == []
 test15 = [testVal 5, testVal 1 .. testVal 5] == [testVal 5]
@@ -92,11 +106,11 @@ test16 = toEnum (fromEnum (Odd 3)) == Odd 3
 -- Это сомнительный тест. Скорее всего, его нет на stepik
 --test17 = fromEnum(Odd 3) + 1 == fromEnum(Odd 5)
 
-testList = [test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11, test13, test14, test15, test16]
+testList = [test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11, test12, test13, test14, test15, test16]
 allTests = zip [0..] testList
 -- Список тестов с ошибками
 badTests = map fst $ filter (not . snd) allTests
 
-allTestsQC = mapM_ (quickCheck) [test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11, test13, test14, test15, test16]
+allTestsQC = mapM_ (quickCheck) [test0, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, test11, test12, test13, test14, test15, test16]
 
              
