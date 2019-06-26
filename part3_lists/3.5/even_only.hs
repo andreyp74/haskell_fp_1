@@ -14,20 +14,4 @@ evenOnly = reverse . fst . foldl (\(s,c) x -> if c `mod` 2 == 0 then (x:s,1+c) e
 evenOnly' :: [a] -> [a]
 evenOnly' = snd . foldr (\x (xs,ys) -> (x:ys,xs)) ([],[])
 
-{-
-Попробуйте добиться того, чтобы реализованная вами в прошлом задании функция evenOnly позволяла работать и с бесконечными списками.
-То есть, например, запрос на первые три элемента бесконечного списка, возвращаемого этой функцией, примененной к списку всех натуральных чисел, должен завершаться:
-
-GHCi> take 3 (evenOnly [1..])
-[2,4,6]
--}
-
-evenOnly2 :: [a] -> [a]
-evenOnly2 [] = []
-evenOnly2 (_:[]) = []
-evenOnly2 (_:x2:xs) = x2 : evenOnly2 xs
-
-
-evenOnly'' :: [a] -> [a]
-evenOnly'' = snd . foldr (\x ~(xs,ys) -> (x:ys,xs)) ([],[])
 

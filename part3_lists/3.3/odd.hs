@@ -97,7 +97,7 @@ test9 = [testVal 7, testVal 5 .. testVal 11] == []
 test10 = [testVal 3, testVal 5 .. testVal 1] == []
 
 test11 = take 4 [testVal 5, testVal 5 .. ] == replicate 4 (testVal 5)
-
+-- Неочевидный тест, но такое поведение ожидается 
 test12 = take 4 [testVal 5, testVal 5 .. testVal 11] == []
 test13 = take 4 [testVal 5, testVal 5 .. testVal 5] == replicate 4 (testVal 5)
 test14 = [testVal 5, testVal 5 .. testVal 3] == []
