@@ -13,5 +13,14 @@ GHCi> change 7
 
 module Change where
 
+import Data.List
+
+coins :: (Num a) => [a]
+coins = [2,3,7]
+
 change :: (Ord a, Num a) => a -> [[a]]
-change = undefined
+change s = nub $ concatMap permutations $ filter (\xs -> sum(xs) == s) [x++y | x <- genLists s coins, y <- genLists s coins, x < y]
+    where 
+        replicateSerial x n = (replicate n x) : replicateSerial x (n + 1)
+        replicateSerialWhile k m = takeWhile (\xs -> sum(xs) <= m)  $ replicateSerial k 0
+        genLists s' = concatMap (\x -> replicateSerialWhile x s')
