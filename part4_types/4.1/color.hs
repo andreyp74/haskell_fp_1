@@ -7,3 +7,8 @@ data Color = Red | Green | Blue
 GHCi> show Red
 "Red"
 -}
+
+instance Show Color where
+    show Red = "Red"
+    show Green = "Green"
+    show Blue = "Blue"

@@ -5,12 +5,27 @@
 Можно считать, что на вход не будут подаваться числа с ведущими нулями. 
 -}
 
-data Bit = Zero | One
-data Sign = Minus | Plus
+module Bit where
+
+data Bit = Zero | One deriving (Eq, Show)
+data Sign = Minus | Plus deriving (Eq, Show)
 data Z = Z Sign [Bit]
+
+instance Eq Z where
+    (Z s x) == (Z s' y) = s == s' && x == y
+
+oper Minus = (-)
+oper Plus  = (+)
+
+--emptyZ = Z _ []
 
 add :: Z -> Z -> Z
 add = undefined
+
+helper sign xs ys = foldl (\(x, y) (as, r) -> ((op $ x y):as, r)) ([], 0) zs 
+    where
+        op = oper sign 
+        zs = zip xs ys
 
 mul :: Z -> Z -> Z
 mul = undefined
