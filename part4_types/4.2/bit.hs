@@ -9,16 +9,25 @@ module Bit where
 
 data Bit = Zero | One deriving (Eq, Show)
 data Sign = Minus | Plus deriving (Eq, Show)
-data Z = Z Sign [Bit]
+data Z = Z Sign [Bit] deriving (Eq, Show)
 
-instance Eq Z where
-    (Z s x) == (Z s' y) = s == s' && x == y
+--instance Eq Z where
+--    (Z s x) == (Z s' y) = s == s' && x == y
 
---oper Plus  Plus  x y = x + y 
---oper Minus Minus x y = - x - y
---oper _     x y = x + y
+bitToInt :: Bit -> Int
+bitToInt Zero = 0
+bitToInt One  = 1
 
---emptyZ = Z _ []
+intToBit :: Int -> Bit
+intToBit 0 = Zero
+intToBit 1 = One
+intToBit _ = error "Unexpected value!!!"
+
+signToOp :: Sign -> Int -> Int -> Int
+signToOp Minus = (-)
+signToOp Plus  = (+)
+
+emptyZ = undefined
 
 add :: Z -> Z -> Z
 add = undefined
@@ -26,11 +35,19 @@ add = undefined
 mul :: Z -> Z -> Z
 mul = undefined
 
-helper xs ys = reverse $ resultRest:resultBits   
+
+addHelper xs ys = reverse $ rest':bits'
     where
-        (resultBits, resultRest) = foldl (\(bits, r) (x, y) -> ((nextBit x y r):bits, rest x y r)) ([], 0) zs
-        nextBit x y r = (x + y + r) `mod` 2
-        rest x y r = (x + y + r) `div` 2
+        (bits', rest') = foldl (\(bits, rest) (x, y) -> ((addBits x y rest):bits, calcRest x y rest)) ([], Zero) zs
+        addBits x y r = intToBit $ (bitToInt x + bitToInt y + bitToInt r) `mod` 2
+        calcRest x y r = intToBit $ (bitToInt x + bitToInt y + bitToInt r) `div` 2
+        zs = zip xs ys
+
+subHelper xs ys = reverse $ rest':bits'
+    where
+        (bits', rest') = foldl (\(bits, rest) (x, y) -> ((subBits x y rest):bits, calcRest x y rest)) ([], Zero) zs
+        subBits x y r = intToBit $ (bitToInt x - bitToInt y - bitToInt r) `mod` 2
+        calcRest x y r = intToBit $ (bitToInt x - bitToInt y - bitToInt r) `div` 2
         zs = zip xs ys
 
 
