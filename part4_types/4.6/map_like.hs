@@ -22,7 +22,20 @@ newtype ListMap k v = ListMap { getListMap :: [(k,v)] }
     deriving (Eq,Show)
 
 instance MapLike (ListMap k v) where
-    empty :: m k v
+    --empty :: m k v
     empty = [(,)] 
 
-    lookup :: Ord k => k -> m k v -> Maybe v
+    --lookup :: Ord k => k -> m k v -> Maybe v
+    lookup _ empty = Nothing
+    lookup key [(x,y):xys] | key == x = Just y
+                           | otherwise = lookup key xys 
+
+    --insert :: Ord k => k -> v -> m k v -> m k v
+    insert key value dict = (key,value):dict
+
+    --delete :: Ord k => k -> m k v -> m k v
+    delete key dict = deleteHelper key dict newDict
+        where 
+            deleteHelper _   empty newDict = newDict
+            deleteHelper key [(x,y):xys] newDict | key /= x = (x,y):newDict
+                                                 | otherwise = deleteHelper key xys newDict
