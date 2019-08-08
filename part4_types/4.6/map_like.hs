@@ -21,21 +21,19 @@ class MapLike m where
 newtype ListMap k v = ListMap { getListMap :: [(k,v)] }
     deriving (Eq,Show)
 
-instance MapLike (ListMap k v) where
-    --empty :: m k v
-    empty = [(,)] 
+instance MapLike ListMap where
+    empty = ListMap { getListMap=[] } 
 
-    --lookup :: Ord k => k -> m k v -> Maybe v
-    lookup _ empty = Nothing
-    lookup key [(x,y):xys] | key == x = Just y
-                           | otherwise = lookup key xys 
+    lookup _ (ListMap []) = Nothing
+    lookup key (ListMap ((k,v):xs)) | key == k = Just v
+                                    | otherwise = lookup key (ListMap xs) 
 
-    --insert :: Ord k => k -> v -> m k v -> m k v
-    insert key value dict = (key,value):dict
+    insert key value (ListMap dict) = ListMap $ (key,value):dict
 
-    --delete :: Ord k => k -> m k v -> m k v
-    delete key dict = deleteHelper key dict newDict
+    delete key (ListMap dict) = deleteHelper key (ListMap dict) (ListMap [])
         where 
-            deleteHelper _   empty newDict = newDict
-            deleteHelper key [(x,y):xys] newDict | key /= x = (x,y):newDict
-                                                 | otherwise = deleteHelper key xys newDict
+            deleteHelper _  (ListMap []) (ListMap newDict) = ListMap $ reverse newDict
+            deleteHelper key (ListMap ((k,v):xs)) (ListMap newDict) | key /= k = deleteHelper key (ListMap xs) (ListMap $ (k,v):newDict)
+                                                                    | otherwise = deleteHelper key (ListMap xs) (ListMap newDict)
+
+--test0 = MapLike.fromList [(0,1),(2,3),(4,5)] (ListMap [])
