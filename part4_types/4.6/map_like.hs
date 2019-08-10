@@ -20,7 +20,7 @@ class MapLike m where
 
 newtype ListMap k v = ListMap { getListMap :: [(k,v)] }
     deriving (Eq,Show)
-
+    
 instance MapLike ListMap where
     empty = ListMap { getListMap=[] } 
 
@@ -28,12 +28,10 @@ instance MapLike ListMap where
     lookup key (ListMap ((k,v):xs)) | key == k = Just v
                                     | otherwise = lookup key (ListMap xs) 
 
-    insert key value (ListMap dict) = ListMap $ (key,value):dict
+    insert key value (ListMap dict) = ListMap $ (key,value):(getListMap $ delete key (ListMap dict))
 
     delete key (ListMap dict) = deleteHelper key (ListMap dict) (ListMap [])
         where 
             deleteHelper _  (ListMap []) (ListMap newDict) = ListMap $ reverse newDict
             deleteHelper key (ListMap ((k,v):xs)) (ListMap newDict) | key /= k = deleteHelper key (ListMap xs) (ListMap $ (k,v):newDict)
                                                                     | otherwise = deleteHelper key (ListMap xs) (ListMap newDict)
-
---test0 = MapLike.fromList [(0,1),(2,3),(4,5)] (ListMap [])
