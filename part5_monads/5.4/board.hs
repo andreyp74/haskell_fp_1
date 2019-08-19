@@ -21,7 +21,9 @@ nextPositions = undefined
 nextPositionsN :: Board -> Int -> (Board -> Bool) -> [Board]
 nextPositionsN b n pred | n < 0     = []
                         | n == 0    = do
-                            if pred b then return b else []
+                            --if pred b then return b else []
+                            True <- return $ pred b
+                            return b
                         | otherwise = do 
                             b' <- nextPositions b
                             nextPositionsN b' (n - 1) pred
